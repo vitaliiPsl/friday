@@ -1,0 +1,17 @@
+var name1 = "Oliver";
+var age1 = 18;
+_name2 = "Joe";
+_age2 = 21;
+
+fun info(name_1, age_1, name_2, age_2){
+    print("First person: ", name_1, age_1);
+    print("Second person: ", name_2, age_2);
+};
+
+info(name1, age1, name2, age2);
+
+:second_info(name_1, name_2){
+    print(name_1, name_2);
+};
+
+second_info(name1, name2);
