@@ -39,9 +39,11 @@ class Scope_f;
 
 
 class Ast_f{
+    
+public:
+//type
     Ast_type m_type;
 
-public:
 //scope
     Scope_f* scope;
     

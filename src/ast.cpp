@@ -1,6 +1,7 @@
 #include "include/ast.hpp"
 
 Ast_f::Ast_f(Ast_type ast_t) : m_type(ast_t){
+//node scope
     scope = nullptr;
     
 //compound

@@ -2,6 +2,7 @@
 
 #include "include/io.hpp"
 #include "include/lexer.hpp"
+#include "include/parser.hpp"
 
 int main(int args, char** argv){
     if(args < 2)
@@ -16,5 +17,9 @@ int main(int args, char** argv){
     //     token = lexer->get_token();
     // }
 
-    
-}
+    Scope_f* g_scope = new Scope_f();
+    Parser_f* parser = new Parser_f(lexer, g_scope);
+    Ast_f* root = parser->parse();
+    std::cout << "Size: " << root->compound_size << std::endl;
+    std::cout << "Type: " << root->compound_value[root->compound_size - 2]->m_type << std::endl;
+}   

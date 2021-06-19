@@ -52,7 +52,7 @@ Token_f* Lexer_f::get_token(){
             case ';':
                 return get_next_token((new Token_f(Token_type::SEMI_TOKEN, get_current())));
             case ',':
-                return get_next_token((new Token_f(Token_type::COME_TOKEN, get_current())));
+                return get_next_token((new Token_f(Token_type::COMA_TOKEN, get_current())));
             case '(':
                 return get_next_token((new Token_f(Token_type::LPAREN_TOKEN, get_current())));
             case ')':
@@ -129,7 +129,6 @@ Token_f* Lexer_f::get_number(){
         skip_current();
     } 
 
-    skip_current(); //skip '"'
 
     return (new Token_f(Token_type::NUMBER_TOKEN, number_value));
 }

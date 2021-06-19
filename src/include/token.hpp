@@ -1,7 +1,6 @@
 #if !defined(TOKEN_H)
 #define TOKEN_H
 
-
 enum Token_type{
     ID_TOKEN, 
     STRING_TOKEN,
@@ -9,7 +8,7 @@ enum Token_type{
 
     ASSIGNMENT_TOKEN,
     SEMI_TOKEN,
-    COME_TOKEN,
+    COMA_TOKEN,
 
     LPAREN_TOKEN,
     RPAREN_TOKEN,

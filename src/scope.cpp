@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <cstring>
 
-Scope_f::Scope_f(bool scope_t = 0) : m_type(scope_t){
+Scope_f::Scope_f(bool scope_t) : m_type(scope_t){
     m_variable_definition_size = 0;
     m_variable_definitions = nullptr;
 
