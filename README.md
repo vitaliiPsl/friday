@@ -1,2 +1,3 @@
 *#Friday*
 
+#Code example:
