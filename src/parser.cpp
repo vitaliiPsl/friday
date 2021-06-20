@@ -282,7 +282,7 @@ Ast_f* Parser_f::parse_string(){
 Ast_f* Parser_f::parse_number(){
     // puts(__func__);
     
-    Ast_f* ast_number = new Ast_f(Ast_type::STRING_AST);
+    Ast_f* ast_number = new Ast_f(Ast_type::NUMBER_AST);
     ast_number->scope = m_scope;
 
     ast_number->number_value = new char[(strlen(m_curr_token->get_value()) + 1) * sizeof(char)];

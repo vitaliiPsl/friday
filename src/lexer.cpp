@@ -116,8 +116,6 @@ Token_f* Lexer_f::get_string(){
     return (new Token_f(Token_type::STRING_TOKEN, string_value));
 }
 Token_f* Lexer_f::get_number(){
-    skip_current();
-
     char* number_value = new char[1];
     number_value[0] = '\0';
 

@@ -39,11 +39,9 @@ class Scope_f;
 
 
 class Ast_f{
-    
-public:
-//type
     Ast_type m_type;
 
+public:
 //scope
     Scope_f* scope;
     
@@ -103,6 +101,7 @@ public:
 
 public:
     Ast_f(Ast_type ast_t);
+    Ast_type get_type() const;
 };
 
 #endif // AST_H

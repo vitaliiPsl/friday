@@ -21,6 +21,8 @@ public:
 
     void add_function_definition(Ast_f* function_definition);
     Ast_f* get_function_definition(char* function_name);
+
+    bool get_type() const;
 };
 
 #endif // SCOPE_H

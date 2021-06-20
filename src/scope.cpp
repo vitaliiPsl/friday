@@ -55,3 +55,7 @@ Ast_f* Scope_f::get_function_definition(char* function_name){
 
     return nullptr;
 }
+
+bool Scope_f::get_type() const{
+    return m_type;
+}

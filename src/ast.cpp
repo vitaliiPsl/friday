@@ -58,3 +58,8 @@ Ast_f::Ast_f(Ast_type ast_t) : m_type(ast_t){
     bin_op_right = nullptr;
     bin_op_operator = nullptr;
 }
+
+Ast_type Ast_f::get_type() const{
+    return m_type;
+}
+
