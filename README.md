@@ -1,9 +1,6 @@
-*#Friday*
+**Friday**
 
-Сapability:
-[x] variables
-[x] functions
-[] expressions - still developing 
+
 
 Code example:
 ```
