@@ -1,5 +1,10 @@
 *#Friday*
 
+Сapability:
+[x] variables
+[x] functions
+[] expressions - still developing 
+
 Code example:
 ```
 #there are two ways to declare variable: keyword 'var' and with '_' as first character of variable's name
