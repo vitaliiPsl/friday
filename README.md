@@ -1,7 +1,9 @@
 ***Friday***
 
-
-
+Language capability:
+- [x] Variables
+- [X] Functions
+- [ ] Expressions - still in development
 Code example:
 ```
 #there are two ways to declare variable: keyword 'var' and with '_' as first character of variable's name
