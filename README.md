@@ -1,2 +1,2 @@
-*#Friday*
+*#Friday programming language interpreter*
 
