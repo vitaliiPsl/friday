@@ -8,6 +8,7 @@ enum Token_type{
 
     ASSIGNMENT_TOKEN,
     SEMI_TOKEN,
+    ENDL_TOKEN,
     COMA_TOKEN,
 
     LPAREN_TOKEN,

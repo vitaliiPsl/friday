@@ -23,7 +23,7 @@ void Lexer_f::skip_current(){
     }
 }
 void Lexer_f::skip_spaces(){
-    while(m_current == ' ' ||  m_current == '\n')
+    while(m_current == ' ')
         skip_current();
 }
 char* Lexer_f::get_current(){
@@ -37,7 +37,7 @@ char* Lexer_f::get_current(){
 Token_f* Lexer_f::get_token(){
     while(m_index < m_content_size && m_current != '0'){
 
-        if(m_current == ' ' || m_current == '\n')
+        if(m_current == ' ')
             skip_spaces();
         if(isalpha(m_current) || m_current == '_' || m_current == ':')
             return get_id();
@@ -51,6 +51,8 @@ Token_f* Lexer_f::get_token(){
                 return get_next_token((new Token_f(Token_type::ASSIGNMENT_TOKEN, get_current())));
             case ';':
                 return get_next_token((new Token_f(Token_type::SEMI_TOKEN, get_current())));
+            case '\n':
+                return get_next_token((new Token_f(Token_type::ENDL_TOKEN, get_current())));
             case ',':
                 return get_next_token((new Token_f(Token_type::COMA_TOKEN, get_current())));
             case '(':
@@ -116,6 +118,7 @@ Token_f* Lexer_f::get_string(){
     return (new Token_f(Token_type::STRING_TOKEN, string_value));
 }
 Token_f* Lexer_f::get_number(){
+
     char* number_value = new char[1];
     number_value[0] = '\0';
 

@@ -66,8 +66,8 @@ Ast_f* Parser_f::parse_compound(){
 
     ast_compound->compound_value[ast_compound->compound_size - 1] = statement;
 
-    while(m_curr_token->get_type() == Token_type::SEMI_TOKEN){
-        next_token(Token_type::SEMI_TOKEN);
+    while(m_curr_token->get_type() == Token_type::ENDL_TOKEN){
+        next_token(Token_type::ENDL_TOKEN);
 
         statement = parse_statement();
         statement->scope = m_scope;
@@ -120,7 +120,7 @@ Ast_f* Parser_f::parse_variable_definition(){
     }
     next_token(Token_type::ID_TOKEN);//skip variable name
 
-    if(m_curr_token->get_type() == Token_type::SEMI_TOKEN){
+    if(m_curr_token->get_type() == Token_type::ENDL_TOKEN){
         ast_variable_definition->variable_definition_value = parse_ni();
         return ast_variable_definition;
     }
