@@ -1,19 +1,52 @@
-***Friday***
+# **Friday**
 
 Language capability:
 - [x] Variables
 - [X] Functions
 - [ ] Expressions - still in development
 
+
+**Syntax:**
+
+There two ways to declare variable:
+  - Keyword 'var':
+```
+var name = "John"
+```
+  - Character '_' as first symbol of variable name:
+```
+_age = 18
+```
+Two ways to declare function:
+  - Keyword 'fun':
+```
+fun do_smth(arg1){
+  println(arg1)
+}
+
+do_smth(name)
+```
+  - Character ':' as first symbol of function name:
+```
+:do_smth2(arg2){
+  println(arg2)
+}
+do_smth2(age)
+```
+Built in functions:
+  - *print()* - print text
+`print(name)`
+  - *println()* - print line of text
+`println("Hello friday!")`
+
+
 Code example:
 ```
-#there are two ways to declare variable: keyword 'var' and with '_' as first character of variable's name
 var name1 = "John'
 var age1 = 18
 _name2 = "Jane"
 _age2 = 21
 
-#two ways to declare function: keyword 'fun' and ':' as first character of function's name
 fun info(name_1, age_1, name_2, age_2){
   println("First person: ", name_1, age_1)
   println("Second person: ", name_2, age_2)
