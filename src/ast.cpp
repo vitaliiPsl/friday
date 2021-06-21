@@ -9,8 +9,6 @@ Ast_f::Ast_f(Ast_type ast_t) : m_type(ast_t){
     compound_value = nullptr;
 
 //expression
-    expression = nullptr;
-    expression_size = 0;
     expression_tree_root = nullptr;
 
 //variable definition
@@ -47,11 +45,17 @@ Ast_f::Ast_f(Ast_type ast_t) : m_type(ast_t){
 //number 
     number_value = nullptr;
 
+//integer
+    integer_value = 0;
+
+//float
+    float_value = 0;
+
 //ni
     ni = nullptr;
 
 //operators
-    operator_priority = 0;;
+    operator_priority = 0;
 
 //operations
     bin_op_left = nullptr;

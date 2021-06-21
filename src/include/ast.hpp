@@ -19,6 +19,8 @@ enum Ast_type{
 
     STRING_AST,
     NUMBER_AST,
+    INTEGER_AST,
+    FLOAT_AST,
     NI_AST,
 
     END_AST, //END OF OPERATIONS
@@ -50,8 +52,6 @@ public:
     Ast_f** compound_value;
 
 //expression
-    Ast_f** expression;
-    size_t expression_size;
     Ast_f* expression_tree_root;
 
 //variable definition
@@ -87,6 +87,12 @@ public:
 
 //number 
     char* number_value;
+
+//integer
+    long integer_value;
+
+//float
+    float float_value;
 
 //ni
     char* ni;

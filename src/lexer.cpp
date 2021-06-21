@@ -14,19 +14,23 @@ Lexer_f::~Lexer_f(){
 }
 
 void Lexer_f::skip_current(){
+    // puts(__func__);
+
     if(m_index < m_content_size && m_current != '\0'){
         m_index++;
         m_current = m_content[m_index];
     }
-    else{
-        std::cout << "End of the file" << std::endl;
-    }
 }
 void Lexer_f::skip_spaces(){
+    // puts(__func__);
+
     while(m_current == ' ')
         skip_current();
 }
+
 char* Lexer_f::get_current(){
+    // puts(__func__);
+
     char* curr_c = new char[2];
     curr_c[0] = m_current;
     curr_c[1] = '\0';
@@ -35,7 +39,9 @@ char* Lexer_f::get_current(){
 }
 
 Token_f* Lexer_f::get_token(){
-    while(m_index < m_content_size && m_current != '0'){
+    // puts(__func__);
+
+    while(m_index < m_content_size && m_current != '\0'){
 
         if(m_current == ' ')
             skip_spaces();
@@ -77,10 +83,11 @@ Token_f* Lexer_f::get_token(){
                 break;
         }
     }
-
     return (new Token_f(Token_type::EOF_TOKEN, "\0"));
 }
 Token_f* Lexer_f::get_id(){
+    // puts(__func__);
+
     char* id_value = new char[1];
     id_value[0] = '\0';
     char* curr_c = get_current();
@@ -100,24 +107,32 @@ Token_f* Lexer_f::get_id(){
     return (new Token_f(Token_type::ID_TOKEN, id_value));
 }
 Token_f* Lexer_f::get_string(){
+    // puts(__func__);
+
     skip_current();
 
     char* string_value = new char[1];
     string_value[0] = '\0';
 
-    while(m_current != '"'){
+    for(int i = 0; i < 1000 && m_current != '"'; i++){
         char* curr_c = get_current();
         string_value = (char*)realloc(string_value, (strlen(string_value) + strlen(curr_c) + 1) * sizeof(char));
         strcat(string_value, curr_c);
 
         skip_current();
+    }
+    if(m_current != '"'){
+        std::cout << "Expect terminating character '\"'" << std::endl;
+        exit(1);
     } 
 
     skip_current(); //skip '"'
 
     return (new Token_f(Token_type::STRING_TOKEN, string_value));
 }
+
 Token_f* Lexer_f::get_number(){
+    // puts(__func__);
 
     char* number_value = new char[1];
     number_value[0] = '\0';
@@ -128,12 +143,38 @@ Token_f* Lexer_f::get_number(){
         strcat(number_value, curr_c);
 
         skip_current();
+    }
+
+    if(m_current == '.'){
+        char* curr_c = get_current();
+        number_value = (char*)realloc(number_value, (strlen(number_value) + strlen(curr_c) + 1) * sizeof(char));
+        strcat(number_value, curr_c);
+
+        skip_current();
+        if(isdigit(m_current)){
+            while(isdigit(m_current)){
+                char* curr_c = get_current();
+                number_value = (char*)realloc(number_value, (strlen(number_value) + strlen(curr_c) + 1) * sizeof(char));
+                strcat(number_value, curr_c);
+
+                skip_current();
+            }
+            
+            if(m_current != ' ' && m_current != '\n' && m_current != ';'){
+                std::cout << "Unexpected character '" << m_current << "' in number literal" << std::endl;
+                exit(1);
+            }
+        }
+
+        return (new Token_f(Token_type::FLOAT_TOKEN, number_value));
     } 
 
-
-    return (new Token_f(Token_type::NUMBER_TOKEN, number_value));
+    return (new Token_f(Token_type::INTEGER_TOKEN, number_value));
 }
+
 Token_f* Lexer_f::get_next_token(Token_f* token){
+    // puts(__func__);
+
     skip_current();
     return token;
 }

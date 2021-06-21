@@ -37,9 +37,17 @@ private:
 
     Ast_f* parse_string();
     Ast_f* parse_number();
+    Ast_f* parse_integer();
+    Ast_f* parse_float();
     Ast_f* parse_ni();
+    Ast_f* parse_operator();
 
     Ast_f* parse_expression();
+    Ast_f* expr();
+    Ast_f* term();
+    Ast_f* factor();
+    void traverse(Ast_f* root);
+
 };
 
 #endif // PARSER_H

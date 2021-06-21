@@ -14,10 +14,12 @@ void Visitor_f::std_println(Ast_f** argv, size_t args){
             case Ast_type::STRING_AST:
                 printf("%s ", arg_data->string_value);
                 break;
-            case Ast_type::NUMBER_AST:
-                printf("%s ", arg_data->number_value);
+            case Ast_type::INTEGER_AST:
+                printf("%ld ", arg_data->integer_value);
                 break;
-            
+            case Ast_type::FLOAT_AST:
+                printf("%f ", arg_data->float_value);
+                break;
             case Ast_type::NI_AST:
                 printf("%s ", arg_data->ni);
                 break;
@@ -46,12 +48,15 @@ Ast_f* Visitor_f::visit(Ast_f* node){
             return visit_function(node);
         case Ast_type::STRING_AST:
             return visit_string(node);
-        case Ast_type::NUMBER_AST:
+        case Ast_type::INTEGER_AST:
+            return visit_number(node);
+        case Ast_type::FLOAT_AST:
             return visit_number(node);
         case Ast_type::NI_AST:
             return visit_ni(node);
-        case Ast_type::EXPRESSION_AST:
-            return visit_expression(node);
+        case Ast_type::EXPRESSION_AST:{
+            return visit_expression(node->expression_tree_root);
+        }
         case Ast_type::END_AST: 
             return node;
         default:
@@ -95,8 +100,10 @@ Ast_f* Visitor_f::visit_variable(Ast_f* node){
     if(!variable_definition)
         variable_definition = m_scope->get_variable_definition(node->variable_name);
     
-    if(variable_definition)
+    if(variable_definition){
+        Ast_f* var_definition_value = visit(variable_definition->variable_definition_value);
         return visit(variable_definition->variable_definition_value);
+    }
 
     std::cout << "Undefined variable: " << node->variable_name << std::endl;
     exit(1);
@@ -108,10 +115,12 @@ Ast_f* Visitor_f::visit_variable_assignment(Ast_f* node){
     Ast_f* variable_definition = node->scope->get_variable_definition(node->variable_assignment_name);
     if(!variable_definition)
         variable_definition = m_scope->get_variable_definition(node->variable_assignment_name);
-    if(variable_definition)
-        variable_definition->variable_definition_value = node->variable_assignment_value;
+    if(variable_definition){
+        Ast_f* var_assignment_value = visit(node->variable_assignment_value);
+        variable_definition->variable_definition_value = var_assignment_value;
         return node;
-    
+    }
+
     std::cout << "Undefined variable: " << node->variable_assignment_name << std::endl;
     exit(1);
 }
@@ -178,4 +187,135 @@ Ast_f* Visitor_f::visit_ni(Ast_f* node){
 Ast_f* Visitor_f::visit_expression(Ast_f* node){
     // puts(__func__);
     
+    if(node->get_type() != Ast_type::BINARY_OPERATION_AST)
+        return visit(node);
+    
+    Ast_f* left, *right, *b_operator;
+    // std::cout << "Left: " << std::endl; 
+    // std::cout << node->bin_op_left->get_type() << std::endl;
+    left = visit_expression(node->bin_op_left);
+    // std::cout << "Right: " << std::endl;
+    // std::cout << node->bin_op_right->get_type() << std::endl;
+    right = visit_expression(node->bin_op_right);
+    // std::cout << "Operator: " << node->bin_op_operator->get_type() << std::endl;
+    b_operator = node->bin_op_operator;
+
+    if(left->get_type() == Ast_type::STRING_AST || right->get_type() == Ast_type::STRING_AST){
+        std::cout << "It is forbiden to use string in expression!" << std::endl;
+        exit(1);
+    }
+
+    return visitor_evaluate_binary_operation(left, right, b_operator);
 }
+
+Ast_f* Visitor_f::visitor_evaluate_binary_operation(Ast_f* left, Ast_f* right, Ast_f* b_operator){
+    // puts(__func__);
+
+    if(left->get_type() == Ast_type::FLOAT_AST && right->get_type() == Ast_type::FLOAT_AST){
+        double d_left = left->float_value;
+        double d_right = right->float_value;
+        double result;
+
+        switch(b_operator->get_type()){
+            case Ast_type::OPERATOR_AR_ADDITION_AST:
+                result = d_left + d_right;
+                break;
+            case Ast_type::OPERATOR_AR_SUBTRACTION_AST:
+                result = d_left - d_right;
+                break;
+            case Ast_type::OPERATOR_AR_MULTIPLICATION_AST:
+                result = d_left * d_right;
+                break;
+            case Ast_type::OPERATOR_AR_DIVISION_AST:
+                result = d_left / d_right;
+                break;
+            default:
+                break;
+        }
+
+        Ast_f* float_number = new Ast_f(Ast_type::FLOAT_AST);
+        float_number->float_value = result;
+        return float_number;
+    }
+    if(left->get_type() == Ast_type::INTEGER_AST && right->get_type() == Ast_type::INTEGER_AST){
+        long i_left = left->integer_value;
+        long i_right = right->integer_value;
+        long result;
+
+        switch(b_operator->get_type()){
+            case Ast_type::OPERATOR_AR_ADDITION_AST:
+                result = i_left + i_right;
+                break;
+            case Ast_type::OPERATOR_AR_SUBTRACTION_AST:
+                result = i_left - i_right;
+                break;
+            case Ast_type::OPERATOR_AR_MULTIPLICATION_AST:
+                result = i_left * i_right;
+                break;
+            case Ast_type::OPERATOR_AR_DIVISION_AST:
+                result = i_left / i_right;
+                break;
+            default:
+                break;
+        }
+
+        Ast_f* int_number = new Ast_f(Ast_type::INTEGER_AST);
+        int_number->integer_value = result;
+        return int_number;
+    }
+    else{
+        if(left->get_type() == Ast_type::FLOAT_AST){
+            double d_left = left->float_value;
+            double d_right = right->integer_value;
+            double result;
+
+            switch(b_operator->get_type()){
+                case Ast_type::OPERATOR_AR_ADDITION_AST:
+                    result = d_left + d_right;
+                    break;
+                case Ast_type::OPERATOR_AR_SUBTRACTION_AST:
+                    result = d_left - d_right;
+                    break;
+                case Ast_type::OPERATOR_AR_MULTIPLICATION_AST:
+                    result = d_left * d_right;
+                    break;
+                case Ast_type::OPERATOR_AR_DIVISION_AST:
+                    result = d_left / d_right;
+                    break;
+                default:
+                    break;
+            }
+
+            Ast_f* float_number = new Ast_f(Ast_type::FLOAT_AST);
+            float_number->float_value = result;
+            return float_number;
+        }
+        else{
+            double d_left = left->integer_value;
+            double d_right = right->float_value;
+            double result;
+
+            switch(b_operator->get_type()){
+                case Ast_type::OPERATOR_AR_ADDITION_AST:
+                    result = d_left + d_right;
+                    break;
+                case Ast_type::OPERATOR_AR_SUBTRACTION_AST:
+                    result = d_left - d_right;
+                    break;
+                case Ast_type::OPERATOR_AR_MULTIPLICATION_AST:
+                    result = d_left * d_right;
+                    break;
+                case Ast_type::OPERATOR_AR_DIVISION_AST:
+                    result = d_left / d_right;
+                    break;
+                default:
+                    break;
+            }
+
+            Ast_f* float_number = new Ast_f(Ast_type::FLOAT_AST);
+            float_number->float_value = result;
+            return float_number;
+        }
+    }
+}
+

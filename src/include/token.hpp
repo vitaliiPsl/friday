@@ -5,6 +5,8 @@ enum Token_type{
     ID_TOKEN, 
     STRING_TOKEN,
     NUMBER_TOKEN,
+    INTEGER_TOKEN,
+    FLOAT_TOKEN,
 
     ASSIGNMENT_TOKEN,
     SEMI_TOKEN,
