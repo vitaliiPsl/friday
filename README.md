@@ -3,7 +3,7 @@
 Language capability:
 - [x] Variables
 - [X] Functions
-- [ ] Expressions - still in development
+- [X] Expressions - (issues)
 
 
 **Syntax:**
