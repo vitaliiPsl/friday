@@ -1,8 +1,10 @@
 var value = 5 + 3 * 10 + 5
 _value1 = 12.0 / 3 * 4 + 4
 _value2 = 5 + 3 * (10 + 5)
+_value3 = 3 % 2
 
 println("Result: ")
 println(value)
 println(value1)
 println(value2)
+println(value3)

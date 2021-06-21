@@ -229,6 +229,9 @@ Ast_f* Visitor_f::visitor_evaluate_binary_operation(Ast_f* left, Ast_f* right, A
             case Ast_type::OPERATOR_AR_DIVISION_AST:
                 result = d_left / d_right;
                 break;
+            case Ast_type::OPERATOR_AR_MODULO_AST:
+                std::cout << "It is forbiden to use modulo operator with float number!" << std::endl;
+                exit(1);
             default:
                 break;
         }
@@ -254,6 +257,9 @@ Ast_f* Visitor_f::visitor_evaluate_binary_operation(Ast_f* left, Ast_f* right, A
                 break;
             case Ast_type::OPERATOR_AR_DIVISION_AST:
                 result = i_left / i_right;
+                break;
+            case Ast_type::OPERATOR_AR_MODULO_AST:
+                result = i_left % i_right;
                 break;
             default:
                 break;
@@ -282,6 +288,9 @@ Ast_f* Visitor_f::visitor_evaluate_binary_operation(Ast_f* left, Ast_f* right, A
                 case Ast_type::OPERATOR_AR_DIVISION_AST:
                     result = d_left / d_right;
                     break;
+                case Ast_type::OPERATOR_AR_MODULO_AST:
+                    std::cout << "It is forbiden to use modulo operator with float number!" << std::endl;
+                    exit(1);
                 default:
                     break;
             }
@@ -308,6 +317,9 @@ Ast_f* Visitor_f::visitor_evaluate_binary_operation(Ast_f* left, Ast_f* right, A
                 case Ast_type::OPERATOR_AR_DIVISION_AST:
                     result = d_left / d_right;
                     break;
+                case Ast_type::OPERATOR_AR_MODULO_AST:
+                    std::cout << "It is forbiden to use modulo operator with float number!" << std::endl;
+                    exit(1);
                 default:
                     break;
             }
