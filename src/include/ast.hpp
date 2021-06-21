@@ -19,6 +19,8 @@ enum Ast_type{
 
     STRING_AST,
     NUMBER_AST,
+    INTEGER_AST,
+    FLOAT_AST,
     NI_AST,
 
     END_AST, //END OF OPERATIONS
@@ -87,6 +89,12 @@ public:
 
 //number 
     char* number_value;
+
+//integer
+    long integer_value;
+
+//float
+    float float_value;
 
 //ni
     char* ni;

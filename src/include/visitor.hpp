@@ -20,6 +20,8 @@ private:
     Ast_f* visit_function(Ast_f* node);
     Ast_f* visit_string(Ast_f* node);
     Ast_f* visit_number(Ast_f* node);
+    // Ast_f* visit_integer(Ast_f* node);
+    // Ast_f* visit_float(Ast_f* node);
     Ast_f* visit_ni(Ast_f* node);
     Ast_f* visit_expression(Ast_f* node);
 

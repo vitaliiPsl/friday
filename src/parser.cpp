@@ -293,6 +293,32 @@ Ast_f* Parser_f::parse_number(){
     return ast_number;
 }
 
+Ast_f* Parser_f::parse_integer(){
+    // puts(__func__);
+    
+    Ast_f* ast_integer = new Ast_f(Ast_type::INTEGER_AST);
+    ast_integer->scope = m_scope;
+
+    ast_integer->integer_value = atoi(m_curr_token->get_value());
+
+    next_token(Token_type::INTEGER_TOKEN);
+
+    return ast_integer;
+}
+
+Ast_f* Parser_f::parse_float(){
+    // puts(__func__);
+    
+    Ast_f* ast_float = new Ast_f(Ast_type::FLOAT_AST);
+    ast_float->scope = m_scope;
+
+    ast_float->float_value = atof(m_curr_token->get_value());
+
+    next_token(Token_type::INTEGER_TOKEN);
+
+    return ast_float;
+}
+
 Ast_f* Parser_f::parse_ni(){
     // puts(__func__);
     

@@ -37,6 +37,8 @@ private:
 
     Ast_f* parse_string();
     Ast_f* parse_number();
+    Ast_f* parse_integer();
+    Ast_f* parse_float();
     Ast_f* parse_ni();
 
     Ast_f* parse_expression();

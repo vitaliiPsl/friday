@@ -47,6 +47,12 @@ Ast_f::Ast_f(Ast_type ast_t) : m_type(ast_t){
 //number 
     number_value = nullptr;
 
+//integer
+    integer_value = 0;
+
+//float
+    float_value = 0;
+
 //ni
     ni = nullptr;
 

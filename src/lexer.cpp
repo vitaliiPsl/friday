@@ -136,25 +136,29 @@ Token_f* Lexer_f::get_number(){
         strcat(number_value, curr_c);
 
         skip_current();
+        if(isdigit(m_current)){
+            while(isdigit(m_current)){
+                char* curr_c = get_current();
+                number_value = (char*)realloc(number_value, (strlen(number_value) + strlen(curr_c) + 1) * sizeof(char));
+                strcat(number_value, curr_c);
+
+                skip_current();
+            }
+            
+            if(m_current != ' ' && m_current != '\n' && m_current != ';'){
+                std::cout << "Unexpected character '" << m_current << "' in number literal" << std::endl;
+                exit(1);
+            }
+        }
+
+        return (new Token_f(Token_type::FLOAT_TOKEN, number_value));
     } 
 
-    if(isdigit(m_current)){
-        while(isdigit(m_current)){
-            char* curr_c = get_current();
-            number_value = (char*)realloc(number_value, (strlen(number_value) + strlen(curr_c) + 1) * sizeof(char));
-            strcat(number_value, curr_c);
+    
 
-            skip_current();
-        }
-        
-        if(m_current != ' ' && m_current != '\n' && m_current != ';'){
-            std::cout << "Unexpected character '" << m_current << "' in number literal" << std::endl;
-            exit(1);
-        }
-    }
-
-    return (new Token_f(Token_type::NUMBER_TOKEN, number_value));
+    return (new Token_f(Token_type::INTEGER_TOKEN, number_value));
 }
+
 Token_f* Lexer_f::get_next_token(Token_f* token){
     skip_current();
     return token;
