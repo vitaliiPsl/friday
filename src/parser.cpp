@@ -330,20 +330,111 @@ Ast_f* Parser_f::parse_ni(){
     return ast_ni;
 }
 
+Ast_f* Parser_f::parse_operator(){
+    Ast_f* ast_operator;
+    switch(m_curr_token->get_value()[0]){
+        case '+':
+            ast_operator = new Ast_f(Ast_type::OPERATOR_AR_ADDITION_AST);
+            ast_operator->operator_priority = 5;
+            ast_operator->scope = m_scope;
+            break;
+        case '-':
+            ast_operator = new Ast_f(Ast_type::OPERATOR_AR_SUBTRACTION_AST);
+            ast_operator->operator_priority = 5;
+            ast_operator->scope = m_scope;
+            break;
+        case '*':
+            ast_operator = new Ast_f(Ast_type::OPERATOR_AR_MULTIPLICATION_AST);
+            ast_operator->operator_priority = 5;
+            ast_operator->scope = m_scope;
+            break;
+        case '/':
+            ast_operator = new Ast_f(Ast_type::OPERATOR_AR_DIVISION_AST);
+            ast_operator->operator_priority = 5;
+            ast_operator->scope = m_scope;
+            break;
+        case '%':
+            ast_operator = new Ast_f(Ast_type::OPERATOR_AR_MODULO_AST);
+            ast_operator->operator_priority = 5;
+            ast_operator->scope = m_scope;
+            break;
+        default:
+            std::cout << "Unexpected token: '" << m_curr_token->get_value() << "' with type: " << m_curr_token->get_type() << std::endl;
+            exit(1);
+    }
+    next_token(Token_type::ARITHMETIC_OPERATOR_TOKEN);
+
+    return ast_operator;
+}
+
 Ast_f* Parser_f::parse_expression(){
     // puts(__func__);
     
-    
-    switch(m_curr_token->get_type()){
-        case Token_type::ID_TOKEN:
-            return parse_id();
-        case Token_type::NUMBER_TOKEN:
-            return parse_number();
-        case Token_type::STRING_TOKEN:
-            return parse_string();
-        default:
-            break;
+    Ast_f* ast_expression = new Ast_f(Ast_type::EXPRESSION_AST);
+    ast_expression->scope = m_scope;
+
+    ast_expression->expression_tree_root = expr();
+
+    // std::cout << ast_expression->expression_tree_root->get_type() << std::endl;
+
+    return ast_expression;
+}
+
+
+
+Ast_f* Parser_f::expr(){
+    // puts(__func__);
+    Ast_f* left = term();
+    if(m_curr_token->get_type() == Token_type::ARITHMETIC_OPERATOR_TOKEN){
+        if(m_curr_token->get_value()[0] == '+' || m_curr_token->get_value()[0] == '-'){
+            Ast_f* e_operator = parse_operator();
+            Ast_f* node = new Ast_f(Ast_type::BINARY_OPERATION_AST);
+            node->bin_op_left = left;
+            node->bin_op_operator = e_operator;
+            node->bin_op_left = expr();
+            return node;
+        }
     }
 
-    return (new Ast_f(Ast_type::END_AST));
+    return left;
+}
+
+Ast_f* Parser_f::term(){
+    // puts(__func__);
+    Ast_f* left = factor();
+
+    if(m_curr_token->get_type() == Token_type::ARITHMETIC_OPERATOR_TOKEN){
+        if(m_curr_token->get_value()[0] == '*' || m_curr_token->get_value()[0] == '/'){
+            Ast_f* t_operator = parse_operator();
+            Ast_f* node = new Ast_f(Ast_type::BINARY_OPERATION_AST);
+            node->bin_op_left = left;
+            node->bin_op_operator = t_operator;
+            node->bin_op_right = term();
+            return node;
+        }
+    }
+
+    return left;
+}
+
+Ast_f* Parser_f::factor(){
+    // puts(__func__);
+    
+    if(m_curr_token->get_type() == Token_type::INTEGER_TOKEN)
+        return parse_integer();
+    if(m_curr_token->get_type() == Token_type::FLOAT_TOKEN)
+        return parse_integer();
+    if(m_curr_token->get_type() == Token_type::ID_TOKEN)
+        return parse_integer();
+    if(m_curr_token->get_type() == Token_type::STRING_TOKEN)
+        return parse_integer();
+    if(m_curr_token->get_type() == Token_type::LPAREN_TOKEN){
+        next_token(Token_type::LPAREN_TOKEN);
+        Ast_f* expr = parse_expression();
+        next_token(Token_type::RPAREN_TOKEN);
+        return expr;
+    }
+
+    std::cout << "Unexpected token: '" << m_curr_token->get_value() << "' with type: " << m_curr_token->get_type() << std::endl;
+    exit(1);
 }

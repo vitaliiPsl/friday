@@ -52,8 +52,6 @@ public:
     Ast_f** compound_value;
 
 //expression
-    Ast_f** expression;
-    size_t expression_size;
     Ast_f* expression_tree_root;
 
 //variable definition

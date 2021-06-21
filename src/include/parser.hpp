@@ -40,8 +40,12 @@ private:
     Ast_f* parse_integer();
     Ast_f* parse_float();
     Ast_f* parse_ni();
+    Ast_f* parse_operator();
 
     Ast_f* parse_expression();
+    Ast_f* expr();
+    Ast_f* term();
+    Ast_f* factor();
 };
 
 #endif // PARSER_H
