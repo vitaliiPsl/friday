@@ -46,6 +46,8 @@ private:
     Ast_f* expr();
     Ast_f* term();
     Ast_f* factor();
+    void traverse(Ast_f* root);
+
 };
 
 #endif // PARSER_H

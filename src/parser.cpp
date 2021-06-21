@@ -3,7 +3,7 @@
 #include <cstring>
 
 Parser_f::Parser_f(Lexer_f* lexer, Scope_f* scope){
-    // puts(__func__);
+    puts(__func__);
 
     m_lexer = lexer;
     m_curr_token = lexer->get_token();
@@ -25,7 +25,7 @@ Parser_f::~Parser_f(){
 }
 
 void Parser_f::next_token(Token_type token_t){
-    // puts(__func__);
+    puts(__func__);
 
     if(m_curr_token->get_type() == token_t){
         delete m_prev_token;
@@ -40,20 +40,20 @@ void Parser_f::next_token(Token_type token_t){
 }
 
 void Parser_f::set_scope(Scope_f* scope){
-    // puts(__func__);
+    puts(__func__);
 
     m_scope = scope;
 }
 
 
 Ast_f* Parser_f::parse(){
-    // puts(__func__);
+    puts(__func__);
 
     return parse_compound();
 }
 
 Ast_f* Parser_f::parse_compound(){
-    // puts(__func__);
+    puts(__func__);
 
     Ast_f* ast_compound = new Ast_f(Ast_type::COMPOUND_AST);
     ast_compound->scope = m_scope;
@@ -83,7 +83,7 @@ Ast_f* Parser_f::parse_compound(){
 }
 
 Ast_f* Parser_f::parse_statement(){
-    // puts(__func__);
+    puts(__func__);
 
     if(m_curr_token->get_type() == Token_type::ID_TOKEN)
         return parse_id();
@@ -92,7 +92,7 @@ Ast_f* Parser_f::parse_statement(){
 }
 
 Ast_f* Parser_f::parse_id(){
-    // puts(__func__);
+    puts(__func__);
 
     if(strcmp(m_curr_token->get_value(), "var") == 0 || m_curr_token->get_value()[0] == '_')
         return parse_variable_definition();
@@ -104,7 +104,7 @@ Ast_f* Parser_f::parse_id(){
 }
 
 Ast_f* Parser_f::parse_variable_definition(){
-    // puts(__func__);
+    puts(__func__);
 
     Ast_f* ast_variable_definition = new Ast_f(Ast_type::VARIABLE_DEFINITION_AST);
     ast_variable_definition->scope = m_scope;
@@ -132,7 +132,7 @@ Ast_f* Parser_f::parse_variable_definition(){
 }
 
 Ast_f* Parser_f::parse_variable(){
-    // puts(__func__);
+    puts(__func__);
 
     next_token(Token_type::ID_TOKEN); // skip variable name
 
@@ -154,7 +154,7 @@ Ast_f* Parser_f::parse_variable(){
 }
 
 Ast_f* Parser_f::parse_variable_assignment(){
-    // puts(__func__);
+    puts(__func__);
 
     Ast_f* ast_variable_assignment = new Ast_f(Ast_type::VARIABLE_ASSIGNMENT_AST);
     ast_variable_assignment->scope = m_scope;
@@ -169,7 +169,7 @@ Ast_f* Parser_f::parse_variable_assignment(){
 }
 
 Ast_f* Parser_f::parse_function_definition(){
-    // puts(__func__);
+    puts(__func__);
 
     Ast_f* ast_function_definition = new Ast_f(Ast_type::FUNCTION_DEFINITION_AST);
     ast_function_definition->scope = m_scope;
@@ -212,7 +212,7 @@ Ast_f* Parser_f::parse_function_definition(){
 }
 
 Ast_f* Parser_f::parse_function(){
-    // puts(__func__);
+    puts(__func__);
 
     Ast_f* ast_function = new Ast_f(Ast_type::FUNCTION_AST);
     ast_function->scope = m_scope;
@@ -231,7 +231,7 @@ Ast_f* Parser_f::parse_function(){
 }
 
 Ast_f* Parser_f::parse_arguments_list(){
-    // puts(__func__);
+    puts(__func__);
     
     Ast_f* ast_arguments_list = new Ast_f(Ast_type::ARGUMENTS_LIST_AST);
     ast_arguments_list->scope = m_scope;
@@ -252,7 +252,7 @@ Ast_f* Parser_f::parse_arguments_list(){
 }
 
 Ast_f* Parser_f::parse_argument(){
-    // puts(__func__);
+    puts(__func__);
     
     Ast_f* ast_argument = new Ast_f(Ast_type::ARGUMENT_AST);
     ast_argument->scope = m_scope;
@@ -266,7 +266,7 @@ Ast_f* Parser_f::parse_argument(){
 }
 
 Ast_f* Parser_f::parse_string(){
-    // puts(__func__);
+    puts(__func__);
     
     Ast_f* ast_string = new Ast_f(Ast_type::STRING_AST);
     ast_string->scope = m_scope;
@@ -280,7 +280,7 @@ Ast_f* Parser_f::parse_string(){
 }
 
 Ast_f* Parser_f::parse_number(){
-    // puts(__func__);
+    puts(__func__);
     
     Ast_f* ast_number = new Ast_f(Ast_type::NUMBER_AST);
     ast_number->scope = m_scope;
@@ -294,7 +294,7 @@ Ast_f* Parser_f::parse_number(){
 }
 
 Ast_f* Parser_f::parse_integer(){
-    // puts(__func__);
+    puts(__func__);
     
     Ast_f* ast_integer = new Ast_f(Ast_type::INTEGER_AST);
     ast_integer->scope = m_scope;
@@ -307,20 +307,20 @@ Ast_f* Parser_f::parse_integer(){
 }
 
 Ast_f* Parser_f::parse_float(){
-    // puts(__func__);
+    puts(__func__);
     
     Ast_f* ast_float = new Ast_f(Ast_type::FLOAT_AST);
     ast_float->scope = m_scope;
 
     ast_float->float_value = atof(m_curr_token->get_value());
 
-    next_token(Token_type::INTEGER_TOKEN);
+    next_token(Token_type::FLOAT_TOKEN);
 
     return ast_float;
 }
 
 Ast_f* Parser_f::parse_ni(){
-    // puts(__func__);
+    puts(__func__);
     
     Ast_f* ast_ni = new Ast_f(Ast_type::NI_AST);
     ast_ni->scope = m_scope;
@@ -368,22 +368,20 @@ Ast_f* Parser_f::parse_operator(){
 }
 
 Ast_f* Parser_f::parse_expression(){
-    // puts(__func__);
+    puts(__func__);
     
     Ast_f* ast_expression = new Ast_f(Ast_type::EXPRESSION_AST);
     ast_expression->scope = m_scope;
 
     ast_expression->expression_tree_root = expr();
-
     // std::cout << ast_expression->expression_tree_root->get_type() << std::endl;
-
     return ast_expression;
 }
 
 
 
 Ast_f* Parser_f::expr(){
-    // puts(__func__);
+    puts(__func__);
     Ast_f* left = term();
     if(m_curr_token->get_type() == Token_type::ARITHMETIC_OPERATOR_TOKEN){
         if(m_curr_token->get_value()[0] == '+' || m_curr_token->get_value()[0] == '-'){
@@ -391,7 +389,7 @@ Ast_f* Parser_f::expr(){
             Ast_f* node = new Ast_f(Ast_type::BINARY_OPERATION_AST);
             node->bin_op_left = left;
             node->bin_op_operator = e_operator;
-            node->bin_op_left = expr();
+            node->bin_op_right = expr();
             return node;
         }
     }
@@ -400,9 +398,8 @@ Ast_f* Parser_f::expr(){
 }
 
 Ast_f* Parser_f::term(){
-    // puts(__func__);
+    puts(__func__);
     Ast_f* left = factor();
-
     if(m_curr_token->get_type() == Token_type::ARITHMETIC_OPERATOR_TOKEN){
         if(m_curr_token->get_value()[0] == '*' || m_curr_token->get_value()[0] == '/'){
             Ast_f* t_operator = parse_operator();
@@ -418,16 +415,16 @@ Ast_f* Parser_f::term(){
 }
 
 Ast_f* Parser_f::factor(){
-    // puts(__func__);
+    puts(__func__);
     
     if(m_curr_token->get_type() == Token_type::INTEGER_TOKEN)
         return parse_integer();
     if(m_curr_token->get_type() == Token_type::FLOAT_TOKEN)
-        return parse_integer();
+        return parse_float();
     if(m_curr_token->get_type() == Token_type::ID_TOKEN)
-        return parse_integer();
+        return parse_variable();
     if(m_curr_token->get_type() == Token_type::STRING_TOKEN)
-        return parse_integer();
+        return parse_string();
     if(m_curr_token->get_type() == Token_type::LPAREN_TOKEN){
         next_token(Token_type::LPAREN_TOKEN);
         Ast_f* expr = parse_expression();
@@ -437,4 +434,18 @@ Ast_f* Parser_f::factor(){
 
     std::cout << "Unexpected token: '" << m_curr_token->get_value() << "' with type: " << m_curr_token->get_type() << std::endl;
     exit(1);
+}
+
+void Parser_f::traverse(Ast_f* root){
+    puts(__func__);
+
+    if(!root)
+        return;
+    traverse(root->bin_op_left);
+    
+    if(root->get_type() != Ast_type::BINARY_OPERATION_AST)
+        std::cout << root->get_type() << std::endl;
+    else
+        std::cout << root->bin_op_operator->get_type() << std::endl;;
+    traverse(root->bin_op_right);
 }
