@@ -3,7 +3,7 @@
 Language capability:
 - [x] Variables
 - [X] Functions
-- [X] Expressions - (issues)
+- [X] Expressions
 
 
 **Syntax:**
@@ -58,5 +58,5 @@ info(name1, age1, name2, age2)
   println(name_1, name_2)
 }
  
- second_info(name1, name2)
+second_info(name1, name2)
 ```
