@@ -383,15 +383,17 @@ Ast_f* Parser_f::parse_expression(){
 Ast_f* Parser_f::expr(){
     // puts(__func__);
     Ast_f* left = term();
-    if(m_curr_token->get_type() == Token_type::ARITHMETIC_OPERATOR_TOKEN){
+    while(m_curr_token->get_type() == Token_type::ARITHMETIC_OPERATOR_TOKEN){
         if(m_curr_token->get_value()[0] == '+' || m_curr_token->get_value()[0] == '-'){
             Ast_f* e_operator = parse_operator();
             Ast_f* node = new Ast_f(Ast_type::BINARY_OPERATION_AST);
             node->bin_op_left = left;
             node->bin_op_operator = e_operator;
-            node->bin_op_right = expr();
-            return node;
+            node->bin_op_right = term();
+            left = node;
         }
+        else
+            break;
     }
 
     return left;
@@ -400,15 +402,17 @@ Ast_f* Parser_f::expr(){
 Ast_f* Parser_f::term(){
     // puts(__func__);
     Ast_f* left = factor();
-    if(m_curr_token->get_type() == Token_type::ARITHMETIC_OPERATOR_TOKEN){
+    while(m_curr_token->get_type() == Token_type::ARITHMETIC_OPERATOR_TOKEN){
         if(m_curr_token->get_value()[0] == '*' || m_curr_token->get_value()[0] == '/' | m_curr_token->get_value()[0] == '%'){
             Ast_f* t_operator = parse_operator();
             Ast_f* node = new Ast_f(Ast_type::BINARY_OPERATION_AST);
             node->bin_op_left = left;
             node->bin_op_operator = t_operator;
-            node->bin_op_right = term();
-            return node;
+            node->bin_op_right = factor();
+            left = node;
         }
+        else 
+            break;
     }
 
     return left;
