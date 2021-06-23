@@ -3,7 +3,10 @@
 Language capability:
 - [x] Variables
 - [X] Functions
-- [X] Expressions
+- [X] Arithmetic expressions
+- [ ] Loops
+- [ ] Boolean expressions
+- [ ] Conditional statements
 
 
 **Syntax:**
@@ -59,4 +62,8 @@ info(name1, age1, name2, age2)
 }
  
 second_info(name1, name2)
+
+_value = 5 + 3 * (10 + 5)
+
+println(value)
 ```
