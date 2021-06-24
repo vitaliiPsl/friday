@@ -100,7 +100,6 @@ Ast_f* Parser_f::parse_id(){
         return parse_function_definition();
     else 
         return parse_variable();
-    
 }
 
 Ast_f* Parser_f::parse_variable_definition(){

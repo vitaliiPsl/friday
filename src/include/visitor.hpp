@@ -26,6 +26,7 @@ private:
     Ast_f* visit_expression(Ast_f* node);
     Ast_f* visitor_evaluate_binary_operation(Ast_f* left, Ast_f* right, Ast_f* b_operator);
 
+    void std_print(Ast_f** argv, size_t args);
     void std_println(Ast_f** argv, size_t args);
 };
 
