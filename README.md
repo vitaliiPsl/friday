@@ -4,7 +4,7 @@ Language capability:
 - [x] Variables
 - [X] Functions
 - [X] Arithmetic expressions
-- [ ] Loops
+- [ ] Loops: ~~repeat~~, while, for
 - [ ] Boolean expressions
 - [ ] Conditional statements
 
@@ -42,8 +42,8 @@ Built in functions:
   - *println()* - print line of text
 `println("Hello friday!")`
 
-Statemetns:
-  - *repeat(number)* - repeats repeat body number times
+Statements:
+  - *repeat(number)* - repeats repeat's body 'number' times
 ```
 repeat(5){
   print("That`s Friday!)
