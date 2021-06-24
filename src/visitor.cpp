@@ -20,6 +20,8 @@ Ast_f* Visitor_f::visit(Ast_f* node){
             return visit_function_definition(node);
         case Ast_type::FUNCTION_AST:
             return visit_function(node);
+        case Ast_type::REPEAT_AST:
+            return visit_repeat(node);
         case Ast_type::STRING_AST:
             return visit_string(node);
         case Ast_type::INTEGER_AST:
@@ -144,6 +146,22 @@ Ast_f* Visitor_f::visit_function(Ast_f* node){
     std::cout << "Undefined function with name: " << node->function_name << std::endl;
     exit(1);
 }
+
+Ast_f* Visitor_f::visit_repeat(Ast_f* node){
+    node->repeat_argument->argument_value = visit_expression(node->repeat_argument->argument_value);
+    
+    if(node->repeat_argument->argument_value->get_type() != Ast_type::INTEGER_AST){
+        std::cout << "Repeat loop argument should be integer" << std::endl;
+        exit(1);
+    }    
+    
+    for(int i = 0; i < node->repeat_argument->argument_value->integer_value; i++){
+        visit(node->repeat_body);
+    }
+
+    return node;
+}
+
 
 Ast_f* Visitor_f::visit_string(Ast_f* node){
     // puts(__func__);
