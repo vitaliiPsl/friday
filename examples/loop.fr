@@ -1,0 +1,9 @@
+var value = (3 * 5 + 5) / 4
+_name = "Alex"
+
+println("Value: ", value)
+
+repeat(value){
+    value = value - 1
+    println(value)
+}
