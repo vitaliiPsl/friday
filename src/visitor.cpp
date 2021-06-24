@@ -4,32 +4,6 @@
 
 Visitor_f::Visitor_f(Scope_f* scope) : m_scope(scope){}
 
-void Visitor_f::std_println(Ast_f** argv, size_t args){
-    // puts(__func__);
-
-    for(int i = 0; i < args; i++){
-        Ast_f* arg_data = visit(argv[i]->argument_value);
-
-        switch(arg_data->get_type()){
-            case Ast_type::STRING_AST:
-                printf("%s ", arg_data->string_value);
-                break;
-            case Ast_type::INTEGER_AST:
-                printf("%ld ", arg_data->integer_value);
-                break;
-            case Ast_type::FLOAT_AST:
-                printf("%f ", arg_data->float_value);
-                break;
-            case Ast_type::NI_AST:
-                printf("%s ", arg_data->ni);
-                break;
-            default:
-                std::cout << "Unknown value" << std::endl;    
-        }
-    }
-    puts("");
-}
-
 Ast_f* Visitor_f::visit(Ast_f* node){
     // puts(__func__);
 
@@ -136,6 +110,11 @@ Ast_f* Visitor_f::visit_function_definition(Ast_f* node){
 Ast_f* Visitor_f::visit_function(Ast_f* node){
     // puts(__func__);
     
+    if(strcmp(node->function_name, "print") == 0){
+        std_print(node->function_arguments->arguments_list_value, node->function_arguments->arguments_list_size);
+
+        return node;
+    }
     if(strcmp(node->function_name, "println") == 0){
         std_println(node->function_arguments->arguments_list_value, node->function_arguments->arguments_list_size);
 
@@ -331,3 +310,34 @@ Ast_f* Visitor_f::visitor_evaluate_binary_operation(Ast_f* left, Ast_f* right, A
     }
 }
 
+void Visitor_f::std_print(Ast_f** argv, size_t args){
+    // puts(__func__);
+
+    for(int i = 0; i < args; i++){
+        Ast_f* arg_data = visit(argv[i]->argument_value);
+
+        switch(arg_data->get_type()){
+            case Ast_type::STRING_AST:
+                printf("%s", arg_data->string_value);
+                break;
+            case Ast_type::INTEGER_AST:
+                printf("%ld", arg_data->integer_value);
+                break;
+            case Ast_type::FLOAT_AST:
+                printf("%f", arg_data->float_value);
+                break;
+            case Ast_type::NI_AST:
+                printf("%s", arg_data->ni);
+                break;
+            default:
+                std::cout << "Unknown value" << std::endl;    
+        }
+    }
+}
+
+void Visitor_f::std_println(Ast_f** argv, size_t args){
+    // puts(__func__);
+
+    std_print(argv, args);
+    puts("");
+}
