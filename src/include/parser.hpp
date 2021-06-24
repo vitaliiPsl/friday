@@ -35,6 +35,8 @@ private:
     Ast_f* parse_arguments_list();
     Ast_f* parse_argument();
 
+    Ast_f* parse_repeat();
+    
     Ast_f* parse_string();
     Ast_f* parse_number();
     Ast_f* parse_integer();

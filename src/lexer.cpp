@@ -160,7 +160,7 @@ Token_f* Lexer_f::get_number(){
                 skip_current();
             }
             
-            if(m_current != ' ' && m_current != '\n' && m_current != ';'){
+            if(m_current != ' ' && m_current != '\n' && m_current != ';' && m_current != ')'){
                 std::cout << "Unexpected character '" << m_current << "' in number literal" << std::endl;
                 exit(1);
             }

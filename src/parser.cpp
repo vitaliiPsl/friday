@@ -98,6 +98,8 @@ Ast_f* Parser_f::parse_id(){
         return parse_variable_definition();
     if(strcmp(m_curr_token->get_value(), "fun") == 0 || m_curr_token->get_value()[0] == ':')
         return parse_function_definition();
+    if(strcmp(m_curr_token->get_value(), "repeat") == 0)
+        return parse_repeat();
     else 
         return parse_variable();
 }
@@ -263,6 +265,34 @@ Ast_f* Parser_f::parse_argument(){
 
     return ast_argument;
 }
+
+Ast_f* Parser_f::parse_repeat(){
+    Ast_f* ast_repeat = new Ast_f(Ast_type::REPEAT_AST);
+    ast_repeat->scope = m_scope;
+
+    next_token(Token_type::ID_TOKEN);
+    next_token(Token_type::LPAREN_TOKEN);
+
+    ast_repeat->repeat_argument = parse_argument();
+    
+    next_token(Token_type::RPAREN_TOKEN);
+    next_token(Token_type::LBRACE_TOKEN);
+
+    ast_repeat->repeat_body = new Ast_f(Ast_type::COMPOUND_AST);
+    ast_repeat->repeat_body->scope = new Scope_f(1);
+    
+    Scope_f* parser_scope = m_scope;
+    set_scope(ast_repeat->repeat_body->scope);
+
+    ast_repeat->repeat_body = parse_compound();
+
+    set_scope(parser_scope);
+
+    next_token(Token_type::RBRACE_TOKEN);
+
+    return ast_repeat;
+}
+
 
 Ast_f* Parser_f::parse_string(){
     // puts(__func__);

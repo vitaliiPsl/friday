@@ -13,16 +13,21 @@ public:
 
 private:
     Ast_f* visit_compound(Ast_f* node);
+    
     Ast_f* visit_variable_definition(Ast_f* node);
     Ast_f* visit_variable(Ast_f* node);
     Ast_f* visit_variable_assignment(Ast_f* node);
     Ast_f* visit_function_definition(Ast_f* node);
     Ast_f* visit_function(Ast_f* node);
+
+    Ast_f* visit_repeat(Ast_f* node);
+
     Ast_f* visit_string(Ast_f* node);
     Ast_f* visit_number(Ast_f* node);
     // Ast_f* visit_integer(Ast_f* node);
     // Ast_f* visit_float(Ast_f* node);
     Ast_f* visit_ni(Ast_f* node);
+    
     Ast_f* visit_expression(Ast_f* node);
     Ast_f* visitor_evaluate_binary_operation(Ast_f* left, Ast_f* right, Ast_f* b_operator);
 

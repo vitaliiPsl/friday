@@ -17,6 +17,8 @@ enum Ast_type{
     ARGUMENTS_LIST_AST,
     ARGUMENT_AST,
 
+    REPEAT_AST,
+
     STRING_AST,
     NUMBER_AST,
     INTEGER_AST,
@@ -81,6 +83,10 @@ public:
 //argument
     char* argument_name;
     Ast_f* argument_value;
+
+//repeat
+    Ast_f* repeat_body;
+    Ast_f* repeat_argument;
 
 //string 
     char* string_value;
