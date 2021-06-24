@@ -42,7 +42,13 @@ Built in functions:
   - *println()* - print line of text
 `println("Hello friday!")`
 
-
+Statemetns:
+  - *repeat(number)* - repeats repeat body number times
+```
+repeat(5){
+  print("That`s Friday!)
+} 
+```
 Code example:
 ```
 var name1 = "John'
@@ -63,7 +69,13 @@ info(name1, age1, name2, age2)
  
 second_info(name1, name2)
 
-_value = 5 + 3 * (10 + 5)
+_value = (3 * 5 + 5) / 4
 
 println(value)
+
+repeat(value){
+  value = value - 1
+  println(value)
+}
+
 ```
