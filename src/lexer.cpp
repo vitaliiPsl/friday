@@ -54,7 +54,10 @@ Token_f* Lexer_f::get_token(){
         
         switch(m_current){
             case '=':
-                return get_next_token((new Token_f(Token_type::ASSIGNMENT_TOKEN, get_current())));
+                skip_current();
+                if(m_current == '=')
+                    return get_next_token(new Token_f(Token_type::COMPARISON_OPERATOR_TOKEN, "=="));
+                return (new Token_f(Token_type::ASSIGNMENT_TOKEN, "="));
             case ';':
                 return get_next_token((new Token_f(Token_type::SEMI_TOKEN, get_current())));
             case '\n':
@@ -78,7 +81,26 @@ Token_f* Lexer_f::get_token(){
             case '/':
                 return get_next_token((new Token_f(Token_type::ARITHMETIC_OPERATOR_TOKEN, get_current())));
             case '%':
-                return get_next_token((new Token_f(Token_type::ARITHMETIC_OPERATOR_TOKEN, get_current())));
+                return get_next_token((new Token_f(Token_type::ARITHMETIC_OPERATOR_TOKEN, get_current()))); 
+            case '<':
+                skip_current();
+                if(m_current == '=')
+                    return get_next_token(new Token_f(Token_type::COMPARISON_OPERATOR_TOKEN, "<="));
+                return get_next_token((new Token_f(Token_type::ARITHMETIC_OPERATOR_TOKEN, "<")));
+            case '>':
+                skip_current();
+                if(m_current == '=')
+                    return get_next_token(new Token_f(Token_type::COMPARISON_OPERATOR_TOKEN, ">="));
+                return get_next_token((new Token_f(Token_type::ARITHMETIC_OPERATOR_TOKEN, ">")));
+            case '!':
+                skip_current();
+                if(m_current == '=')
+                    return get_next_token(new Token_f(Token_type::COMPARISON_OPERATOR_TOKEN, "!="));
+                return get_next_token((new Token_f(Token_type::LOGICAL_OPERATOR_TOKEN, "!")));
+            case '&':
+                return get_next_token((new Token_f(Token_type::LOGICAL_OPERATOR_TOKEN, get_current())));
+            case '|':
+                return get_next_token((new Token_f(Token_type::LOGICAL_OPERATOR_TOKEN, get_current())));
             default:
                 break;
         }
