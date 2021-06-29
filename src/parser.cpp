@@ -361,38 +361,82 @@ Ast_f* Parser_f::parse_ni(){
 
 Ast_f* Parser_f::parse_operator(){
     Ast_f* ast_operator;
-    switch(m_curr_token->get_value()[0]){
-        case '+':
-            ast_operator = new Ast_f(Ast_type::OPERATOR_AR_ADDITION_AST);
-            ast_operator->operator_priority = 5;
-            ast_operator->scope = m_scope;
-            break;
-        case '-':
-            ast_operator = new Ast_f(Ast_type::OPERATOR_AR_SUBTRACTION_AST);
-            ast_operator->operator_priority = 5;
-            ast_operator->scope = m_scope;
-            break;
-        case '*':
-            ast_operator = new Ast_f(Ast_type::OPERATOR_AR_MULTIPLICATION_AST);
-            ast_operator->operator_priority = 5;
-            ast_operator->scope = m_scope;
-            break;
-        case '/':
-            ast_operator = new Ast_f(Ast_type::OPERATOR_AR_DIVISION_AST);
-            ast_operator->operator_priority = 5;
-            ast_operator->scope = m_scope;
-            break;
-        case '%':
-            ast_operator = new Ast_f(Ast_type::OPERATOR_AR_MODULO_AST);
-            ast_operator->operator_priority = 5;
-            ast_operator->scope = m_scope;
-            break;
-        default:
-            std::cout << "Unexpected token: '" << m_curr_token->get_value() << "' with type: " << m_curr_token->get_type() << std::endl;
-            exit(1);
-    }
-    next_token(Token_type::ARITHMETIC_OPERATOR_TOKEN);
+    if(strlen(m_curr_token->get_value()) > 1){
+        switch(m_curr_token->get_value()[0]){
+            case '+':
+                ast_operator = new Ast_f(Ast_type::OPERATOR_AR_ADDITION_AST);
+                ast_operator->operator_priority = 5;
+                ast_operator->scope = m_scope;
+                break;
+            case '-':
+                ast_operator = new Ast_f(Ast_type::OPERATOR_AR_SUBTRACTION_AST);
+                ast_operator->operator_priority = 5;
+                ast_operator->scope = m_scope;
+                break;
+            case '*':
+                ast_operator = new Ast_f(Ast_type::OPERATOR_AR_MULTIPLICATION_AST);
+                ast_operator->operator_priority = 5;
+                ast_operator->scope = m_scope;
+                break;
+            case '/':
+                ast_operator = new Ast_f(Ast_type::OPERATOR_AR_DIVISION_AST);
+                ast_operator->operator_priority = 5;
+                ast_operator->scope = m_scope;
+                break;
+            case '%':
+                ast_operator = new Ast_f(Ast_type::OPERATOR_AR_MODULO_AST);
+                ast_operator->operator_priority = 5;
+                ast_operator->scope = m_scope;
+                break;
+            case '&':
+                ast_operator = new Ast_f(Ast_type::OPERATOR_LOG_AND_AST);
+                ast_operator->scope = m_scope;
+                break;
+            case '|':
+                ast_operator = new Ast_f(Ast_type::OPERATOR_LOG_OR_AST);
+                ast_operator->scope = m_scope;
+                break;
+            case '!':
+                ast_operator = new Ast_f(Ast_type::OPERATOR_LOG_NOT_AST);
+                ast_operator->scope = m_scope;
+                break;
+            case '>':
+                ast_operator = new Ast_f(Ast_type::OPERATOR_COMP_GREATER_AST);
+                ast_operator->scope = m_scope;
+                break;
+            case '<':
+                ast_operator = new Ast_f(Ast_type::OPERATOR_COMP_LESS_AST);
+                ast_operator->scope = m_scope;
+                break;
 
+            default:
+                std::cout << "Unexpected token: '" << m_curr_token->get_value() << "' with type: " << m_curr_token->get_type() << std::endl;
+                exit(1);
+        }
+        next_token(Token_type::ARITHMETIC_OPERATOR_TOKEN);
+        return ast_operator;
+    }
+    if(strcmp(m_curr_token->get_value(), "==")){
+        ast_operator = new Ast_f(Ast_type::OPERATOR_COMP_EQUAL_AST);
+        ast_operator->scope = m_scope;
+        next_token(Token_type::COMPARISON_OPERATOR_TOKEN);
+    }
+    if(strcmp(m_curr_token->get_value(), "!=")){
+        ast_operator = new Ast_f(Ast_type::OPERATOR_COMP_NOT_EQUAL_AST);
+        ast_operator->scope = m_scope;
+        next_token(Token_type::COMPARISON_OPERATOR_TOKEN);
+    }
+    if(strcmp(m_curr_token->get_value(), "<=")){
+        ast_operator = new Ast_f(Ast_type::OPERATOR_COMP_LESS_EQUAL_AST);
+        ast_operator->scope = m_scope;
+        next_token(Token_type::COMPARISON_OPERATOR_TOKEN);
+    }
+    if(strcmp(m_curr_token->get_value(), ">=")){
+        ast_operator = new Ast_f(Ast_type::OPERATOR_COMP_GREATER_EQUAL_AST);
+        ast_operator->scope = m_scope;
+        next_token(Token_type::COMPARISON_OPERATOR_TOKEN);
+    }
+    
     return ast_operator;
 }
 
