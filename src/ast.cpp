@@ -39,9 +39,12 @@ Ast_f::Ast_f(Ast_type ast_t) : m_type(ast_t){
     argument_name = nullptr;
     argument_value = nullptr;
 
+//Control flow
+    control_flow_body = nullptr;
 //repeat
-    repeat_body = nullptr;
     repeat_argument = nullptr;
+//while
+    while_expression = nullptr;
 
 //string 
     string_value = nullptr;

@@ -5,5 +5,11 @@ println("Value: ", value)
 
 repeat(value){
     value = value - 1
-    print("That's Friday")
+    println("That's Friday")
+}
+var counter = 0
+
+while(counter < 20){
+    println(counter, " Hell o")
+    counter = counter + 2
 }

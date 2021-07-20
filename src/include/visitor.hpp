@@ -21,15 +21,22 @@ private:
     Ast_f* visit_function(Ast_f* node);
 
     Ast_f* visit_repeat(Ast_f* node);
+    Ast_f* visit_while(Ast_f* node);
+
 
     Ast_f* visit_string(Ast_f* node);
     Ast_f* visit_number(Ast_f* node);
+    Ast_f* visit_bool(Ast_f* node);
     // Ast_f* visit_integer(Ast_f* node);
     // Ast_f* visit_float(Ast_f* node);
     Ast_f* visit_ni(Ast_f* node);
     
     Ast_f* visit_expression(Ast_f* node);
     Ast_f* visitor_evaluate_binary_operation(Ast_f* left, Ast_f* right, Ast_f* b_operator);
+
+    Ast_f* visit_logical_expression(Ast_f* node);
+    Ast_f* visitor_evaluate_logical_binary_operation(Ast_f* left, Ast_f* right, Ast_f* b_operator);
+
 
     void std_print(Ast_f** argv, size_t args);
     void std_println(Ast_f** argv, size_t args);

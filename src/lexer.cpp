@@ -86,12 +86,12 @@ Token_f* Lexer_f::get_token(){
                 skip_current();
                 if(m_current == '=')
                     return get_next_token(new Token_f(Token_type::COMPARISON_OPERATOR_TOKEN, "<="));
-                return get_next_token((new Token_f(Token_type::ARITHMETIC_OPERATOR_TOKEN, "<")));
+                return get_next_token((new Token_f(Token_type::COMPARISON_OPERATOR_TOKEN, "<")));
             case '>':
                 skip_current();
                 if(m_current == '=')
                     return get_next_token(new Token_f(Token_type::COMPARISON_OPERATOR_TOKEN, ">="));
-                return get_next_token((new Token_f(Token_type::ARITHMETIC_OPERATOR_TOKEN, ">")));
+                return get_next_token((new Token_f(Token_type::COMPARISON_OPERATOR_TOKEN, ">")));
             case '!':
                 skip_current();
                 if(m_current == '=')

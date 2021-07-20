@@ -100,6 +100,9 @@ Ast_f* Parser_f::parse_id(){
         return parse_function_definition();
     if(strcmp(m_curr_token->get_value(), "repeat") == 0)
         return parse_repeat();
+    if(strcmp(m_curr_token->get_value(), "while") == 0)
+        return parse_while();
+
     else 
         return parse_variable();
 }
@@ -267,6 +270,8 @@ Ast_f* Parser_f::parse_argument(){
 }
 
 Ast_f* Parser_f::parse_repeat(){
+    // puts(__func__);
+
     Ast_f* ast_repeat = new Ast_f(Ast_type::REPEAT_AST);
     ast_repeat->scope = m_scope;
 
@@ -278,13 +283,13 @@ Ast_f* Parser_f::parse_repeat(){
     next_token(Token_type::RPAREN_TOKEN);
     next_token(Token_type::LBRACE_TOKEN);
 
-    ast_repeat->repeat_body = new Ast_f(Ast_type::COMPOUND_AST);
-    ast_repeat->repeat_body->scope = new Scope_f(1);
+    ast_repeat->control_flow_body = new Ast_f(Ast_type::COMPOUND_AST);
+    ast_repeat->control_flow_body->scope = new Scope_f(1);
     
     Scope_f* parser_scope = m_scope;
-    set_scope(ast_repeat->repeat_body->scope);
+    set_scope(ast_repeat->control_flow_body->scope);
 
-    ast_repeat->repeat_body = parse_compound();
+    ast_repeat->control_flow_body = parse_compound();
 
     set_scope(parser_scope);
 
@@ -293,6 +298,35 @@ Ast_f* Parser_f::parse_repeat(){
     return ast_repeat;
 }
 
+Ast_f* Parser_f::parse_while(){
+    // puts(__func__);
+
+    Ast_f* ast_while = new Ast_f(Ast_type::WHILE_AST);
+    ast_while->scope = m_scope;
+
+    next_token(Token_type::ID_TOKEN);
+    next_token(Token_type::LPAREN_TOKEN);
+
+    //TODO: parse logical expression
+    ast_while->while_expression = parse_logical_expression();
+    
+    next_token(Token_type::RPAREN_TOKEN);
+    next_token(Token_type::LBRACE_TOKEN);
+
+    ast_while->control_flow_body = new Ast_f(Ast_type::COMPOUND_AST);
+    ast_while->control_flow_body->scope = new Scope_f(1);
+    
+    Scope_f* parser_scope = m_scope;
+    set_scope(ast_while->control_flow_body->scope);
+
+    ast_while->control_flow_body = parse_compound();
+
+    set_scope(parser_scope);
+
+    next_token(Token_type::RBRACE_TOKEN);
+
+    return ast_while;
+}
 
 Ast_f* Parser_f::parse_string(){
     // puts(__func__);
@@ -331,7 +365,6 @@ Ast_f* Parser_f::parse_integer(){
     ast_integer->integer_value = atoi(m_curr_token->get_value());
 
     next_token(Token_type::INTEGER_TOKEN);
-
     return ast_integer;
 }
 
@@ -348,6 +381,22 @@ Ast_f* Parser_f::parse_float(){
     return ast_float;
 }
 
+Ast_f* Parser_f::parse_bool(){
+    // puts(__func__);
+    
+    Ast_f* ast_bool = new Ast_f(Ast_type::BOOL_AST);
+    ast_bool->scope = m_scope;
+
+    if(strcmp(m_curr_token->get_value(), "true") == 0)
+        ast_bool->bool_value = 1;
+    else 
+        ast_bool->bool_value = 0;
+
+    next_token(Token_type::ID_TOKEN);
+
+    return ast_bool;
+}
+
 Ast_f* Parser_f::parse_ni(){
     // puts(__func__);
     
@@ -360,8 +409,10 @@ Ast_f* Parser_f::parse_ni(){
 }
 
 Ast_f* Parser_f::parse_operator(){
+    // puts(__func__);
+    
     Ast_f* ast_operator;
-    if(strlen(m_curr_token->get_value()) > 1){
+    if(strlen(m_curr_token->get_value()) < 2){
         switch(m_curr_token->get_value()[0]){
             case '+':
                 ast_operator = new Ast_f(Ast_type::OPERATOR_AR_ADDITION_AST);
@@ -413,7 +464,7 @@ Ast_f* Parser_f::parse_operator(){
                 std::cout << "Unexpected token: '" << m_curr_token->get_value() << "' with type: " << m_curr_token->get_type() << std::endl;
                 exit(1);
         }
-        next_token(Token_type::ARITHMETIC_OPERATOR_TOKEN);
+        next_token(m_curr_token->get_type());
         return ast_operator;
     }
     if(strcmp(m_curr_token->get_value(), "==")){
@@ -451,8 +502,6 @@ Ast_f* Parser_f::parse_expression(){
     return ast_expression;
 }
 
-
-
 Ast_f* Parser_f::expr(){
     // puts(__func__);
     Ast_f* left = term();
@@ -465,8 +514,9 @@ Ast_f* Parser_f::expr(){
             node->bin_op_right = term();
             left = node;
         }
-        else
+        else{
             break;
+        }
     }
 
     return left;
@@ -476,7 +526,7 @@ Ast_f* Parser_f::term(){
     // puts(__func__);
     Ast_f* left = factor();
     while(m_curr_token->get_type() == Token_type::ARITHMETIC_OPERATOR_TOKEN){
-        if(m_curr_token->get_value()[0] == '*' || m_curr_token->get_value()[0] == '/' | m_curr_token->get_value()[0] == '%'){
+        if(m_curr_token->get_value()[0] == '*' || m_curr_token->get_value()[0] == '/' || m_curr_token->get_value()[0] == '%'){
             Ast_f* t_operator = parse_operator();
             Ast_f* node = new Ast_f(Ast_type::BINARY_OPERATION_AST);
             node->bin_op_left = left;
@@ -513,6 +563,63 @@ Ast_f* Parser_f::factor(){
     exit(1);
 }
 
+Ast_f* Parser_f::parse_logical_expression(){
+    // puts(__func__);
+
+    Ast_f* ast_logical_expression = new Ast_f(Ast_type::LOGICAL_EXPRESSION_AST);
+    ast_logical_expression->scope = m_scope;
+
+    ast_logical_expression->expression_tree_root = logical_expr();
+    traverse(ast_logical_expression->expression_tree_root);
+
+    return ast_logical_expression;
+}
+
+Ast_f* Parser_f::logical_expr(){
+    // puts(__func__);
+
+    Ast_f* left = logical_term();
+    while(m_curr_token->get_type() == Token_type::LOGICAL_OPERATOR_TOKEN){
+        Ast_f* e_operator = parse_operator();
+        Ast_f* node = new Ast_f(Ast_type::BINARY_LOGICAL_OPERATION_AST);
+        node->bin_op_left = left;
+        node->bin_op_operator = e_operator;
+        node->bin_op_right = term();
+        left = node;
+    }
+
+    return left;
+}
+
+Ast_f* Parser_f::logical_term(){
+    // puts(__func__);
+
+    Ast_f* left = logical_factor();
+    while(m_curr_token->get_type() == Token_type::COMPARISON_OPERATOR_TOKEN){
+        Ast_f* t_operator = parse_operator();
+        Ast_f* node = new Ast_f(Ast_type::BINARY_LOGICAL_OPERATION_AST);
+        node->bin_op_left = left;
+        node->bin_op_operator = t_operator;
+        node->bin_op_right = logical_factor();
+        left = node;
+    }
+
+    return left;
+}
+
+Ast_f* Parser_f::logical_factor(){
+    // puts(__func__);
+
+    if(m_curr_token->get_type( ) == Token_type::ID_TOKEN &&
+      (strcmp(m_curr_token->get_value(), "true") == 0 || strcmp(m_curr_token->get_value(), "false") == 0)){
+          return parse_bool();
+    }
+    else{
+        return parse_expression();
+        puts("Hello");
+    }
+}
+
 void Parser_f::traverse(Ast_f* root){
     // puts(__func__);
 
@@ -520,7 +627,7 @@ void Parser_f::traverse(Ast_f* root){
         return;
     traverse(root->bin_op_left);
     
-    if(root->get_type() != Ast_type::BINARY_OPERATION_AST)
+    if(root->get_type() != Ast_type::BINARY_LOGICAL_OPERATION_AST)
         std::cout << root->get_type() << std::endl;
     else
         std::cout << root->bin_op_operator->get_type() << std::endl;;

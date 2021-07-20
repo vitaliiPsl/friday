@@ -35,12 +35,16 @@ private:
     Ast_f* parse_arguments_list();
     Ast_f* parse_argument();
 
+//contorl flow
     Ast_f* parse_repeat();
+    Ast_f* parse_while();
+
     
     Ast_f* parse_string();
     Ast_f* parse_number();
     Ast_f* parse_integer();
     Ast_f* parse_float();
+    Ast_f* parse_bool();
     Ast_f* parse_ni();
     Ast_f* parse_operator();
 
@@ -48,6 +52,12 @@ private:
     Ast_f* expr();
     Ast_f* term();
     Ast_f* factor();
+
+    Ast_f* parse_logical_expression();
+    Ast_f* logical_expr();
+    Ast_f* logical_term();
+    Ast_f* logical_factor();
+
     void traverse(Ast_f* root);
 
 };

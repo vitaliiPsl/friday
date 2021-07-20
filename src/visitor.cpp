@@ -20,8 +20,12 @@ Ast_f* Visitor_f::visit(Ast_f* node){
             return visit_function_definition(node);
         case Ast_type::FUNCTION_AST:
             return visit_function(node);
+       
         case Ast_type::REPEAT_AST:
             return visit_repeat(node);
+        case Ast_type::WHILE_AST:
+            return visit_while(node);
+                
         case Ast_type::STRING_AST:
             return visit_string(node);
         case Ast_type::INTEGER_AST:
@@ -32,6 +36,9 @@ Ast_f* Visitor_f::visit(Ast_f* node){
             return visit_ni(node);
         case Ast_type::EXPRESSION_AST:{
             return visit_expression(node->expression_tree_root);
+        }
+        case Ast_type::LOGICAL_EXPRESSION_AST:{
+            return visit_logical_expression(node->expression_tree_root);
         }
         case Ast_type::END_AST: 
             return node;
@@ -148,6 +155,8 @@ Ast_f* Visitor_f::visit_function(Ast_f* node){
 }
 
 Ast_f* Visitor_f::visit_repeat(Ast_f* node){
+    // puts(__func__);
+
     node->repeat_argument->argument_value = visit_expression(node->repeat_argument->argument_value);
     
     if(node->repeat_argument->argument_value->get_type() != Ast_type::INTEGER_AST){
@@ -156,12 +165,23 @@ Ast_f* Visitor_f::visit_repeat(Ast_f* node){
     }    
     
     for(int i = 0; i < node->repeat_argument->argument_value->integer_value; i++){
-        visit(node->repeat_body);
+        visit(node->control_flow_body);
     }
 
     return node;
 }
 
+Ast_f* Visitor_f::visit_while(Ast_f* node){
+    // puts(__func__);
+
+    Ast_f* condition = visit(node->while_expression);
+    while(condition->bool_value){
+        visit(node->control_flow_body);
+        condition = visit(node->while_expression);
+    }
+
+    return node;
+}
 
 Ast_f* Visitor_f::visit_string(Ast_f* node){
     // puts(__func__);
@@ -170,6 +190,12 @@ Ast_f* Visitor_f::visit_string(Ast_f* node){
 }
 
 Ast_f* Visitor_f::visit_number(Ast_f* node){
+    // puts(__func__);
+
+    return node;
+}
+
+Ast_f* Visitor_f::visit_bool(Ast_f* node){
     // puts(__func__);
 
     return node;
@@ -194,13 +220,13 @@ Ast_f* Visitor_f::visit_expression(Ast_f* node){
     // std::cout << "Right: " << std::endl;
     // std::cout << node->bin_op_right->get_type() << std::endl;
     right = visit_expression(node->bin_op_right);
-    // std::cout << "Operator: " << node->bin_op_operator->get_type() << std::endl;
-    b_operator = node->bin_op_operator;
-
+    
     if(left->get_type() == Ast_type::STRING_AST || right->get_type() == Ast_type::STRING_AST){
         std::cout << "It is forbiden to use string in expression!" << std::endl;
         exit(1);
     }
+    // std::cout << "Operator: " << node->bin_op_operator->get_type() << std::endl;
+    b_operator = node->bin_op_operator;
 
     return visitor_evaluate_binary_operation(left, right, b_operator);
 }
@@ -325,6 +351,70 @@ Ast_f* Visitor_f::visitor_evaluate_binary_operation(Ast_f* left, Ast_f* right, A
             float_number->float_value = result;
             return float_number;
         }
+    }
+}
+
+Ast_f* Visitor_f::visit_logical_expression(Ast_f* node){
+    // puts(__func__);
+
+    if(node->get_type() != Ast_type::BINARY_LOGICAL_OPERATION_AST)
+        return visit(node);
+    
+    Ast_f* left, *right, *b_operator;
+    
+    if(node->bin_op_left->get_type() == Ast_type::EXPRESSION_AST)
+        left = visit_expression(node->bin_op_left);
+    else
+        left = visit_logical_expression(node->bin_op_left);
+    if(node->bin_op_right->get_type() == Ast_type::EXPRESSION_AST)
+        right = visit_expression(node->bin_op_right);
+    else
+        right = visit_logical_expression(node->bin_op_right);
+
+    b_operator = node->bin_op_operator;
+
+
+    return visitor_evaluate_logical_binary_operation(left, right, b_operator);
+}
+
+Ast_f* Visitor_f::visitor_evaluate_logical_binary_operation(Ast_f* left, Ast_f* right, Ast_f* b_operator){
+    // puts(__func__);
+
+    Ast_f* ast_bool = new Ast_f(Ast_type::BOOL_AST);
+    ast_bool->scope = m_scope;
+
+    bool result;
+
+    switch(b_operator->get_type()){
+        case Ast_type::OPERATOR_COMP_GREATER_AST:
+            ast_bool->bool_value = left->integer_value > right->integer_value;
+            return ast_bool;
+        case Ast_type::OPERATOR_COMP_LESS_AST:
+            ast_bool->bool_value = left->integer_value < right->integer_value;
+            return ast_bool;
+        case Ast_type::OPERATOR_COMP_GREATER_EQUAL_AST:
+            ast_bool->bool_value = left->integer_value >= right->integer_value;
+            return ast_bool;
+        case Ast_type::OPERATOR_COMP_LESS_EQUAL_AST:
+            ast_bool->bool_value = left->integer_value <= right->integer_value;
+            return ast_bool;
+        case Ast_type::OPERATOR_COMP_EQUAL_AST:
+            ast_bool->bool_value = left->integer_value == right->integer_value;
+            return ast_bool;
+        case Ast_type::OPERATOR_COMP_NOT_EQUAL_AST:
+            ast_bool->bool_value = left->integer_value != right->integer_value;
+            return ast_bool;
+        case Ast_type::OPERATOR_LOG_AND_AST:
+            ast_bool->bool_value = left->integer_value  && right->integer_value;
+            return ast_bool;
+        case Ast_type::OPERATOR_LOG_OR_AST:
+            ast_bool->bool_value = left->integer_value  || right->integer_value;
+            return ast_bool;
+        default:
+            printf("Logical operation error\n");
+            exit(1);
+
+        
     }
 }
 

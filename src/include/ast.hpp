@@ -6,6 +6,7 @@
 enum Ast_type{
     COMPOUND_AST,
     EXPRESSION_AST,
+    LOGICAL_EXPRESSION_AST,
 
     VARIABLE_DEFINITION_AST,
     VARIABLE_AST,
@@ -17,12 +18,15 @@ enum Ast_type{
     ARGUMENTS_LIST_AST,
     ARGUMENT_AST,
 
+//  Control flow
     REPEAT_AST,
+    WHILE_AST,
 
     STRING_AST,
     NUMBER_AST,
     INTEGER_AST,
     FLOAT_AST,
+    BOOL_AST,
     NI_AST,
 
     END_AST, //END OF OPERATIONS
@@ -50,6 +54,9 @@ enum Ast_type{
 //operation type
     BINARY_OPERATION_AST,
     UNARY_OPERATION_AST,
+
+//logical operation type
+    BINARY_LOGICAL_OPERATION_AST,
 };
 
 class Scope_f;
@@ -97,21 +104,29 @@ public:
     char* argument_name;
     Ast_f* argument_value;
 
+
+//Control flow
+    Ast_f* control_flow_body;
 //repeat
-    Ast_f* repeat_body;
     Ast_f* repeat_argument;
+//while
+    Ast_f* while_expression;
 
 //string 
     char* string_value;
 
 //number 
     char* number_value;
+    
 
 //integer
     long integer_value;
 
 //float
     float float_value;
+
+//bool
+    bool bool_value;
 
 //ni
     char* ni;
