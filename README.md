@@ -11,7 +11,7 @@ Language capability:
 
 **Syntax:**
 
-There two ways to declare variable:
+There are two ways to declare variable:
   - Keyword 'var':
 ```
 var name = "John"
